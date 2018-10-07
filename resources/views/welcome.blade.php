@@ -1,96 +1,65 @@
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@lang('welcome.headTitle')</title>
+    <link href="{{ url('css/app.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
+</head>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1>@lang('welcome.titleH1')</h1>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
-                    @endauth
+                @if ($errors->count())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                    {{ $error }}<br>
+                    @endforeach
                 </div>
-            @endif
+                @endif
+              
+                @if(!empty(Session::get('data'))) 
+                    <div class="alert alert-success" role="alert">
+                        <h3>@lang('welcome.responseTitle')</h3>
+                        <h4>@lang('welcome.responseSubTitle')</h4>
+                        <p>@lang('welcome.responseName') <strong>{!! Session::get('data')->name !!}</strong></p>
+                        <p>@lang('welcome.responseEmail') <strong>{!! Session::get('data')->email !!}</strong></p>
+                        <p>@lang('welcome.responseContent') <strong>{!! Session::get('data')->content !!}</strong></p>
+                    </div>
+                @endif
+     
+                <form method="POST" action="{{ url('create') }}">
+                    {!! csrf_field() !!}
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
+                    <div class="form-group @if ($errors->has('name')) has-error @endif">
+                        <label for="name">@lang('welcome.formName')</label>
+                        <input type="text" required id="name" class="form-control" name="name" placeholder="@lang('welcome.formPlaceholderName')" value="{{ Input::old('name') }}">
+                    </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+                    <div class="form-group @if ($errors->has('email')) has-error @endif">
+                        <label for="email">@lang('welcome.formEmail')</label>
+                        <input type="email" required id="email" class="form-control" name="email" placeholder="@lang('welcome.formPlaceholderEmail')" value="{{ Input::old('email') }}">
+                    </div>
+
+                    <div class="form-group @if ($errors->has('content')) has-error @endif">
+                        <label for="content">@lang('welcome.formText')</label>
+                        <textarea rows="4" cols="50" type="text" required id="content" class="form-control" name="content" placeholder="@lang('welcome.formPlaceholderText')">{{ Input::old('content') }}</textarea>
+                        </p>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">@lang('welcome.formSubmit')</button>
+
+                </form>
             </div>
         </div>
-    </body>
+    </div>
+
+    <script url="{{ url('js/app.js') }}"></script>
+</body>
 </html>
